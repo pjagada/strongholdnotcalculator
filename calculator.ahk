@@ -127,34 +127,62 @@ PerfectTravel()
 	;OutputDebug, `n
 	foundLine := false
 	offsetStringArray := []
+	previousLine := []
+	doneWithLine := False
 	Loop, Read, angleOffsets.csv
 	{
 		Loop, Parse, A_LoopReadLine, CSV
 		{
-			if ((realAngle = A_LoopField) and A_Index = 1)
+			if (A_Index = 1)
 			{
-				foundLine := true
-				;OutputDebug, angle in four's sheet: %A_LoopField%
+				if (realAngle = A_LoopField)
+				{
+					foundLine := true
+					;OutputDebug, angle in four's sheet: %A_LoopField%
+				}
+				else if (!foundLine)
+				{
+					previousLine := []
+				}
 			}
-			if (foundLine and A_Index != 1)
+			else
 			{
-				if (InStr(A_LoopField, " "))
-					offsetStringArray.Push(A_LoopField)
+				if (foundLine or doneWithLine)
+				{
+					if (InStr(A_LoopField, " "))
+						offsetStringArray.Push(A_LoopField)
+				}
+				else
+				{
+					if (InStr(A_LoopField, " "))
+						previousLine.Push(A_LoopField)
+				}
 			}
+		}
+		if (doneWithLine)
+		{
+			doneWithLine := false
+			break
 		}
 		if (foundLine)
 		{
-			foundLine := false
-			break
+			doneWithLine := True
 		}
 	}
+	
+	for q, offset in previousLine
+	{
+		offsetStringArray.Push(offset)
+	}
+	
 	angleToOffset := (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
 	;OutputDebug, %angleToOffset% seconds to get the offsets
 	;OutputDebug, `n
 	/*
 	numOffsets := offsetStringArray.MaxIndex()
-	OutputDebug, %numOffsets%
+	numprev := previousLine.MaxIndex()
+	OutputDebug, %numOffsets% %numprev%
 	
 	for i, offsetString in offsetStringArray
 	{
@@ -255,6 +283,7 @@ PerfectTravel()
 
 offsetCalculation(location, offset)
 {
+	;OutputDebug, location: %location%, offset: %offset%
 	checkForEntry := false
 	Loop, Read, coordsToChunk.csv
 	{
