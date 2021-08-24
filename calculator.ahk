@@ -373,6 +373,15 @@ GUIthrow()
 
 }
 
+CheckRes()
+{
+	WinGetPos, X, Y, W, H, Minecraft
+	if (H > 1070)
+		return False
+	else
+		return True
+}
+
 global OX := []
 global OZ := []
 global NX := []
@@ -385,6 +394,9 @@ global NZ := []
 	return
 	
 	^P::
-		PerfectTravel()
+		if (CheckRes())
+			PerfectTravel()
+		else
+			OutputDebug, wrong resolution
 	return
 }
