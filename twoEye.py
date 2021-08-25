@@ -1,16 +1,4 @@
 import csv
-'''
-angleList = list(range(-18000, 18000))
-
-for j in range(len(angleList)):
-    angleList[j] = angleList[j] / 100
-
-data = list(range(len(angleList)))
-
-for i in range(len(data)):
-    data[i] = list(range(len(angleList)))
-
-'''
 
 offsetsList = []
 xLists = []
@@ -50,48 +38,11 @@ for r in range(size):
     headerRow.append(str(angleList[r]))
 #print(headerRow)
 pPoint = 0
-'''
-data = []
-for t in range(size):
-    shortList = []
-    for u in range(size):
-        shortList.append('')
-    data.append(shortList)
-    progress = int(100 * t / size)
-    if (progress >= pPoint):
-        print(f"empty data progress: {progress}%")
-        pPoint += 1
 
-print("made empty dataset")
-#print(data)
-'''
-'''
-pPoint = 0
-for p in range(len(angleList)):
-    column = []
-    angle1 = angleList[p]
-    xList1 = xLists[p]
-    zList1 = zLists[p]
-    for q in range(len(angleList)):
-        angle2 = angleList[q]
-        xList2 = xLists[q]
-        zList2 = zLists[q]
-        for a in range(len(zList1)):
-            for b in range(len(zList2)):
-                if (zList1[a] == zList2[b]):
-                    xDiff = xList1[a] - xList2[b]
-                    if (xDiff == 1 or xDiff == 0 or xDiff == -1):
-                        data[p][q] = "x offsets: " + str(xList1[a]) + ", " + str(xList2[b]) + "; z offset: " + str(zList1[a])
-                        #print("x offsets: " + str(xList1[a]) + " and " + str(xList2[b]) + "; z offset: " + str(zList1[a]))
-    progress = int(100 * p / size)
-    if (progress >= pPoint):
-        print(f"complete dataset progress: {progress}%")
-        pPoint += 1
-'''
 
 #print("finished all comparisons")
 pPoint = 0.0
-with open('twoEye2.csv', mode='w') as file:
+with open('twoEyeX.csv', mode='w') as file:
     fileWriter = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     fileWriter.writerow(headerRow)
     for p in range(size):
