@@ -9,7 +9,7 @@ with open('rawOffsetSheet.csv', mode='r') as csvfile:
         shortRow = [row[i] for i in range(len(row)) if row[i] != '']
         #print(shortRow)
         data.append(shortRow)
-with open('angleOffsets.csv', mode='w') as file:
+with open('angleOffsets.csv', mode='w', newline='') as file:
     fileWriter = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for j in range(len(data)):
         dataRow = data[j]

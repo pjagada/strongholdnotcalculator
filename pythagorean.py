@@ -17,7 +17,7 @@ for i in range(maxAxial):
         row.append(theString)
     data.append(row)
 
-with open('pythagorean.csv', mode='w') as file:
+with open('pythagorean.csv', mode='w', newline='') as file:
     fileWriter = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for k in range(maxAxial):
         fileWriter.writerow(data[k])

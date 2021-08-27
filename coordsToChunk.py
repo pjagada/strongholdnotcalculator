@@ -26,7 +26,7 @@ headerRow = ['Coordinate', 'Chunk number']
 for p in range(len(offsetList)):
     headerRow.append(offsetList[p])
 
-with open('coordsToChunk.csv', mode='w') as file:
+with open('coordsToChunk.csv', mode='w', newline='') as file:
     fileWriter = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     fileWriter.writerow(headerRow)
     for j in range(len(coordList)):

@@ -64,30 +64,10 @@ PythagoreanTheorem(a, b)
 	return (distance)
 }
 
-PerfectTravel()
+/*
+GetActualAngle(angle)
 {
-	OutputDebug, `n
-	OutputDebug, `n
-	array1 := StrSplit(Clipboard, " ")
-	fullx := array1[7]
-	fullz := array1[9]
-	angle := array1[10]
-	arrayx := StrSplit(fullx, ".")
-	arrayz := StrSplit(fullz, ".")
-	x := arrayx[1]
-	z := arrayz[1]
 	foundLine := False
-	slit := 0
-	GUIthing()
-	while(slit = 0)
-	{
-	}
-	throwNum := 0
-	GUIthrow()
-	while(throwNum = 0)
-	{
-	}
-	startTime := A_TickCount
 	Loop, Read, normalAngle.csv
 	{
 		;OutputDebug, %A_LoopReadLine%
@@ -120,6 +100,118 @@ PerfectTravel()
 			break
 		}
 	}
+	return (realAngle) 
+}
+*/
+
+GetActualAngle(angle)
+{
+	;OutputDebug, raw angle is %angle%
+	angleArray := StrSplit(angle, ".")
+	decimals := angleArray[2]
+	;OutputDebug, decimals are %decimals%
+	intAngle := angleArray[1]
+	;OutputDebug, integer angle is %intAngle%
+	sign := SubStr(intAngle, 1, 1)
+	;OutputDebug, first character is %sign%
+	if (sign = "-")
+	{
+		intAngle := SubStr(intAngle, 2)
+		;OutputDebug, integer angle is %intAngle%
+	}
+	intLength := StrLen(intAngle)
+	onesDigit := SubStr(intAngle, 0)
+	;OutputDebug, length of that integer angle is %intLength%
+	if (intLength != 2 and intLength != 1 and intLength != 0)
+	{
+		tensAndAbove := SubStr(intAngle, 1, -1)
+		;OutputDebug, just the tens place and above is %tensAndAbove%
+		
+		foundLine := False
+		Loop, Read, bigAngle.csv
+		{
+			Loop, Parse, A_LoopReadLine, CSV
+			{
+				if ((A_LoopField = tensAndAbove) and (A_Index = 1))
+				{
+					foundLine := True
+				}
+				if (foundLine and A_Index = 2)
+				{
+					realTensAndAbove := A_LoopField
+				}
+			}
+			if (foundLine)
+			{
+				break
+			}
+		}
+		;OutputDebug, %realTensAndAbove%
+		absAngle := realTensAndAbove . 	onesDigit . "." . decimals
+		if (sign = "-")
+		{
+			angle := "-" . absAngle
+		}
+		else
+		{
+			angle := absAngle
+		}
+	}
+	foundLine := False
+	Loop, Read, smallAngle.csv
+	{
+		;OutputDebug, %A_LoopReadLine%
+		Loop, Parse, A_LoopReadLine, CSV
+		{
+			if ((angle = A_LoopField) and (A_Index = 1))
+			{
+				foundLine := True
+				;OutputDebug, Original angle: %A_LoopField%
+			}
+			if (foundLine)
+			{
+				if (A_Index = 2 and slit = "L")
+				{
+					realAngle := A_LoopField
+				}
+				if (A_Index = 3 and slit = "M")
+				{
+					realAngle := A_LoopField
+				}
+				if (A_Index = 4 and slit = "R")
+				{
+					realAngle := A_LoopField
+				}
+			}
+		}
+		if (foundLine)
+		{
+			OutputDebug, Actual angle:   %realAngle%
+			break
+		}
+	}
+	return (realAngle) 
+}
+
+PerfectTravel()
+{
+	OutputDebug, `n
+	OutputDebug, `n
+	array1 := StrSplit(Clipboard, " ")
+	fullx := array1[7]
+	fullz := array1[9]
+	angle := array1[10]
+	arrayx := StrSplit(fullx, ".")
+	arrayz := StrSplit(fullz, ".")
+	x := arrayx[1]
+	z := arrayz[1]
+	slit := 0
+	GUIthing()
+	while(slit = 0)
+	{
+	}
+	startTime := A_TickCount
+	realAngle := GetActualAngle(angle)
 	angleConvert := (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
 	OutputDebug, `n
@@ -128,7 +220,6 @@ PerfectTravel()
 	foundLine := false
 	offsetStringArray := []
 	previousLine := []
-	doneWithLine := False
 	Loop, Read, angleOffsets.csv
 	{
 		Loop, Parse, A_LoopReadLine, CSV
@@ -140,40 +231,22 @@ PerfectTravel()
 					foundLine := true
 					;OutputDebug, angle in four's sheet: %A_LoopField%
 				}
-				else if (!foundLine)
-				{
-					previousLine := []
-				}
 			}
 			else
 			{
-				if (foundLine or doneWithLine)
+				if (foundLine)
 				{
 					if (InStr(A_LoopField, " "))
 						offsetStringArray.Push(A_LoopField)
 				}
-				else
-				{
-					if (InStr(A_LoopField, " "))
-						previousLine.Push(A_LoopField)
-				}
 			}
-		}
-		if (doneWithLine)
-		{
-			doneWithLine := false
-			break
 		}
 		if (foundLine)
 		{
-			doneWithLine := True
+			break
 		}
 	}
 	
-	for q, offset in previousLine
-	{
-		offsetStringArray.Push(offset)
-	}
 	
 	angleToOffset := (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
@@ -188,6 +261,7 @@ PerfectTravel()
 	{
 		OutputDebug, %offsetString%
 	}
+	OutputDebug, `n
 	*/
 	
 	for i, offsetString in offsetStringArray
@@ -229,6 +303,8 @@ PerfectTravel()
 			;OutputDebug, X Z Chunk offset: %xOffset% %zOffset%
 			OutputDebug, Overworld chunk coords: %xChunkDest% %zChunkDest%
 			OutputDebug, Nether block coords:    %xNetherDest% %zNetherDest%
+			OutputDebug, `n
+			/*
 			if (throwNum = 1)
 			{
 				OutputDebug, first throw so adding to array
@@ -260,6 +336,7 @@ PerfectTravel()
 				ExitApp
 			}
 			OutputDebug, `n
+			*/
 		}
 	}
 	destinations := (A_TickCount - startTime) / 1000
@@ -276,6 +353,8 @@ PerfectTravel()
 		OutputDebug, Overworld chunk coords: %ovX% %ovZ%
 		OutputDebug, Nether block coords:    %neX% %neZ%
 	}
+	OutputDebug, `n
+	OutputDebug, all offsets done
 	OutputDebug, `n
 	OutputDebug, `n
 	

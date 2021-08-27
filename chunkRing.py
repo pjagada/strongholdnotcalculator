@@ -12,7 +12,7 @@ for i in range(maxAxial):
         chunkLocation = "inRing"
     data.append([i, chunkLocation])
 
-with open('chunkRing.csv', mode='w') as file:
+with open('chunkRing.csv', mode='w', newline='') as file:
     fileWriter = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for k in range(1, maxAxial):
         fileWriter.writerow(data[k])
