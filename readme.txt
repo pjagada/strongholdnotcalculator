@@ -1,25 +1,12 @@
 Setup instructions:
 
-First step is to extract the folder's contents anywhere (make sure they're all in the same folder).
-
-Then run the python file using the following steps:
-Open up command prompt.
-Navigate to the folder that you extracted everything into by typing "cd <the path name>" into command prompt
-For example if I'm currently in C:\Users\peej\OneDrive, I would type the following:
-cd Documents
-and I would now be in C:\Users\peej\OneDrive\Documents.
-Once you get to the folder, type the following into command prompt to run the python file:
-normalAngle.py
-It'll take a couple minutes since it's generating a large table.
-
+Extract the folder's contents anywhere (make sure they're all in the same folder).
 Download and install debugview: https://docs.microsoft.com/en-us/sysinternals/downloads/debugview
-
-Now that all your tables are generated, run the ahk script that you need (either 1 eye or 2 eye).
-
+Run the ahk script that you need (either 1 eye or 2 eye).
 
 
 
-Use instructions (assuming you already know how to get the perfect travel angle):
+Use instructions (assuming you already know how to get the perfect travel angle, if you don't, then read pages 5 and 6 of this doc: https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit):
 
 Open up DebugView on a second monitor (the program that you installed).
 Once you get your angle and f3 c, pause and press Ctrl P.

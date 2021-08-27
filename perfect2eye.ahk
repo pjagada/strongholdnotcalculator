@@ -240,12 +240,12 @@ PerfectTravel()
 	numOffsets := offsetStringArray.MaxIndex()
 	numprev := previousLine.MaxIndex()
 	OutputDebug, %numOffsets% %numprev%
-	*/
+	
 	for i, offsetString in offsetStringArray
 	{
 		OutputDebug, %offsetString%
 	}
-	
+	*/
 	
 	for i, offsetString in offsetStringArray
 	{
