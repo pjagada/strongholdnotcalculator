@@ -31,7 +31,7 @@ PythagoreanTheorem(a, b)
 	
 	checkForZ := False
 	distance := 0
-	Loop, Read, pythagorean.csv
+	Loop, Read, tables/pythagorean.csv
 	{
 		if (A_Index = 1)
 		{
@@ -128,7 +128,7 @@ GetActualAngle(angle)
 		;OutputDebug, just the tens place and above is %tensAndAbove%
 		
 		foundLine := False
-		Loop, Read, bigAngle.csv
+		Loop, Read, tables/bigAngle.csv
 		{
 			Loop, Parse, A_LoopReadLine, CSV
 			{
@@ -158,7 +158,7 @@ GetActualAngle(angle)
 		}
 	}
 	foundLine := False
-	Loop, Read, smallAngle.csv
+	Loop, Read, tables/smallAngle.csv
 	{
 		;OutputDebug, %A_LoopReadLine%
 		Loop, Parse, A_LoopReadLine, CSV
@@ -220,7 +220,7 @@ PerfectTravel()
 	foundLine := false
 	offsetStringArray := []
 	previousLine := []
-	Loop, Read, angleOffsets.csv
+	Loop, Read, tables/angleOffsets.csv
 	{
 		Loop, Parse, A_LoopReadLine, CSV
 		{
@@ -281,7 +281,7 @@ PerfectTravel()
 		distanceArray := StrSplit(distanceString, ".")
 		distance := distanceArray[1]
 		originDistance := False
-		Loop, Read, chunkRing.csv
+		Loop, Read, tables/chunkRing.csv
 		{
 			Loop, Parse, A_LoopReadLine, CSV
 			{
@@ -364,7 +364,7 @@ offsetCalculation(location, offset)
 {
 	;OutputDebug, location: %location%, offset: %offset%
 	checkForEntry := false
-	Loop, Read, coordsToChunk.csv
+	Loop, Read, tables/coordsToChunk.csv
 	{
 		if (A_Index = 1)
 		{
