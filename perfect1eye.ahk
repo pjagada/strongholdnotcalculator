@@ -186,7 +186,7 @@ GetActualAngle(angle)
 		}
 		if (foundLine)
 		{
-			OutputDebug, Actual angle:   %realAngle%
+			OutputDebug, [Perfect] Actual angle:   %realAngle%
 			break
 		}
 	}
@@ -195,8 +195,7 @@ GetActualAngle(angle)
 
 PerfectTravel()
 {
-	OutputDebug, `n
-	OutputDebug, `n
+	OutputDebug, [Perfect] `n
 	array1 := StrSplit(Clipboard, " ")
 	fullx := array1[7]
 	fullz := array1[9]
@@ -214,7 +213,7 @@ PerfectTravel()
 	realAngle := GetActualAngle(angle)
 	angleConvert := (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
-	OutputDebug, `n
+	OutputDebug, [Perfect] `n
 	;OutputDebug, %angleConvert% seconds to convert the angle
 	;OutputDebug, `n
 	foundLine := false
@@ -301,9 +300,11 @@ PerfectTravel()
 		{
 			;OutputDebug, this is/would be %quality%
 			;OutputDebug, X Z Chunk offset: %xOffset% %zOffset%
-			OutputDebug, Overworld chunk coords: %xChunkDest% %zChunkDest%
-			OutputDebug, Nether block coords:    %xNetherDest% %zNetherDest%
-			OutputDebug, `n
+			OutputDebug, [Perfect] Go to: 
+			OutputDebug, [Perfect] Overworld chunk coords: %xChunkDest% %zChunkDest%
+			OutputDebug, [Perfect] Nether block coords:    %xNetherDest% %zNetherDest%
+			OutputDebug, [Perfect] `n
+			Reload
 			/*
 			if (throwNum = 1)
 			{
@@ -473,9 +474,9 @@ global NZ := []
 	return
 	
 	^P::
-		if (CheckRes())
+		;if (CheckRes())
 			PerfectTravel()
-		else
-			OutputDebug, wrong resolution
+		;else
+			;OutputDebug, wrong resolution
 	return
 }

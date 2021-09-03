@@ -146,7 +146,7 @@ GetActualAngle(angle)
 		}
 		if (foundLine)
 		{
-			OutputDebug, Actual angle:   %realAngle%
+			OutputDebug, [Perfect] Actual angle:   %realAngle%
 			break
 		}
 	}
@@ -155,8 +155,7 @@ GetActualAngle(angle)
 
 PerfectTravel()
 {
-	OutputDebug, `n
-	OutputDebug, `n
+	OutputDebug, [Perfect] `n
 	array1 := StrSplit(Clipboard, " ")
 	fullx := array1[7]
 	fullz := array1[9]
@@ -179,7 +178,7 @@ PerfectTravel()
 	realAngle := GetActualAngle(angle)
 	angleConvert := (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
-	OutputDebug, `n
+	OutputDebug, [Perfect] `n
 	;OutputDebug, %angleConvert% seconds to convert the angle
 	;OutputDebug, `n
 	foundLine := false
@@ -247,6 +246,7 @@ PerfectTravel()
 	}
 	*/
 	
+	foundMatch := False
 	for i, offsetString in offsetStringArray
 	{
 		array2 := StrSplit(offsetString, " ")
@@ -284,11 +284,11 @@ PerfectTravel()
 		{
 			;OutputDebug, this is/would be %quality%
 			;OutputDebug, X Z Chunk offset: %xOffset% %zOffset%
-			OutputDebug, Overworld chunk coords: %xChunkDest% %zChunkDest%
-			OutputDebug, Nether block coords:    %xNetherDest% %zNetherDest%
+			;OutputDebug, Overworld chunk coords: %xChunkDest% %zChunkDest%
+			;OutputDebug, Nether block coords:    %xNetherDest% %zNetherDest%
 			if (throwNum = 1)
 			{
-				OutputDebug, first throw so adding to array
+				;OutputDebug, first throw so adding to array
 				OX.Push(xChunkDest)
 				OZ.Push(zChunkDest)
 				NX.Push(xNetherDest)
@@ -296,17 +296,27 @@ PerfectTravel()
 			}
 			else if (throwNum = 2)
 			{
-				OutputDebug, second throw so checking
+				;OutputDebug, second throw so checking
 				for i, xchunk in OX
 				{
 					if (xchunk = xChunkDest)
 					{
-						OutputDebug, x chunk matches
+						;OutputDebug, x chunk matches
 						zchunk := OZ[i]
 						if (zchunk = zChunkDest)
 						{
-							OutputDebug, z chunk matches
+							;OutputDebug, z chunk matches
 							theIndex := i
+							
+							OutputDebug, [Perfect] Go to:
+							ovX := OX[theIndex]
+							ovZ := OZ[theIndex]
+							neX := NX[theIndex]
+							neZ := NZ[theIndex]
+							OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
+							OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
+							OutputDebug, [Perfect] `n
+							Reload
 						}
 					}
 				}
@@ -316,7 +326,7 @@ PerfectTravel()
 				OutputDebug, throwNum is not 1 or 2
 				ExitApp
 			}
-			OutputDebug, `n
+			;OutputDebug, `n
 		}
 	}
 	destinations := (A_TickCount - startTime) / 1000
@@ -335,11 +345,9 @@ PerfectTravel()
 	}
 	else
 	{
-		OutputDebug, `n
-		OutputDebug, all stuff for first throw done, go ahead and press the hotkey again for your second throw when you have it ready
+		OutputDebug, [Perfect] all stuff for first throw done, go ahead and press the hotkey again for your second throw when you have it ready
 	}
-	OutputDebug, `n
-	OutputDebug, `n
+	OutputDebug, [Perfect] `n
 	
 }
 
@@ -456,9 +464,9 @@ global NZ := []
 	return
 	
 	^P::
-		if (CheckRes())
+		;if (CheckRes())
 			PerfectTravel()
-		else
-			OutputDebug, wrong resolution
+		;else
+			;OutputDebug, wrong resolution
 	return
 }
