@@ -4,6 +4,15 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
+global TTS := False ; enable TTS if you want to
+if (TTS)
+{
+	;ComObjCreate("SAPI.SpVoice").Speak("text")
+	;ComObjCreate("SAPI.SpVoice").Speak("to")
+	;ComObjCreate("SAPI.SpVoice").Speak("speech")
+	;ComObjCreate("SAPI.SpVoice").Speak("is")
+	;ComObjCreate("SAPI.SpVoice").Speak("active")
+}
 
 CheckBlindCoords()
 {
@@ -322,6 +331,10 @@ PerfectTravel()
 							
 							writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ
 							FileAppend, %writeString%, coords.txt
+							if (TTS)
+							{
+								ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
+							}
 							Reload
 						}
 					}
@@ -345,6 +358,10 @@ PerfectTravel()
 		Clipboard := "No intersection found, you probably measured something wrong. Do it again."
 		writeString := "No intersection found, you probably measured something wrong. Do it again."
 		FileAppend, %writeString%, coords.txt
+		if (TTS)
+		{
+			ComObjCreate("SAPI.SpVoice").Speak("Measured wrong, do everything again.")
+		}
 		Reload
 	}
 	if (throwNum = 2)
@@ -361,6 +378,10 @@ PerfectTravel()
 	else
 	{
 		OutputDebug, [Perfect] all stuff for first throw done, go ahead and press the hotkey again for your second throw when you have it ready
+		if (TTS)
+		{
+			ComObjCreate("SAPI.SpVoice").Speak("First throw work done, press hotkey again for second throw when ready.")
+		}
 	}
 	OutputDebug, [Perfect] `n
 	

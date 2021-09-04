@@ -4,6 +4,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
+global TTS := False ; enable TTS if you want to
 
 CheckBlindCoords()
 {
@@ -309,6 +310,10 @@ PerfectTravel()
 			
 			writeString := "OW: " . xChunkDest . " " . zChunkDest . " N: " . xNetherDest . " " . zNetherDest
 			FileAppend, %writeString%, coords.txt
+			if (TTS)
+			{
+				ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
+			}
 			Reload
 			/*
 			if (throwNum = 1)

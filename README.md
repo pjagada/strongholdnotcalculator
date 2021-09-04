@@ -25,6 +25,10 @@ and/or
 
 The script will replace your clipboard with the coords you need to go to once they are ready, so if this works for you, you don't need to do any other setup.
 
+and/or
+
+Enable TTS by right clicking on the script file that you need (either 1 eye or 2 eye), clicking edit script, and changing where it says False at the top to True
+
 ## Use instructions:
 Run the ahk script that you need (either 1 eye or 2 eye) by right clicking on the script file and clicking Run Script.
 
