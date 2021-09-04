@@ -195,6 +195,7 @@ GetActualAngle(angle)
 
 PerfectTravel()
 {
+	FileDelete, coords.txt
 	OutputDebug, [Perfect] `n
 	array1 := StrSplit(Clipboard, " ")
 	fullx := array1[7]
@@ -304,6 +305,10 @@ PerfectTravel()
 			OutputDebug, [Perfect] Overworld chunk coords: %xChunkDest% %zChunkDest%
 			OutputDebug, [Perfect] Nether block coords:    %xNetherDest% %zNetherDest%
 			OutputDebug, [Perfect] `n
+			Clipboard :=  "OW: " xChunkDest " " zChunkDest " N: " xNetherDest " " zNetherDest
+			
+			writeString := "OW: " . xChunkDest . " " . zChunkDest . " N: " . xNetherDest . " " . zNetherDest
+			FileAppend, %writeString%, coords.txt
 			Reload
 			/*
 			if (throwNum = 1)

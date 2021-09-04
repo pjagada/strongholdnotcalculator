@@ -155,6 +155,7 @@ GetActualAngle(angle)
 
 PerfectTravel()
 {
+	FileDelete, coords.txt
 	OutputDebug, [Perfect] `n
 	array1 := StrSplit(Clipboard, " ")
 	fullx := array1[7]
@@ -307,6 +308,7 @@ PerfectTravel()
 						{
 							;OutputDebug, z chunk matches
 							theIndex := i
+							foundMatch := True
 							
 							OutputDebug, [Perfect] Go to:
 							ovX := OX[theIndex]
@@ -316,6 +318,10 @@ PerfectTravel()
 							OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
 							OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
 							OutputDebug, [Perfect] `n
+							Clipboard :=  "OW: " ovX " " ovZ " N: " neX " " neZ
+							
+							writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ
+							FileAppend, %writeString%, coords.txt
 							Reload
 						}
 					}
@@ -332,6 +338,12 @@ PerfectTravel()
 	destinations := (A_TickCount - startTime) / 1000
 	;OutputDebug, %destinations% seconds to get the destinations
 	;OutputDebug, `n
+	if (foundMatch = False and throwNum = 2)
+	{
+		OutputDebug, [Perfect] No intersection found, you probably measured something wrong. Do it again.
+		OutputDebug, [Perfect] `n
+		Reload
+	}
 	if (throwNum = 2)
 	{
 		OutputDebug, `n
