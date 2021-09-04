@@ -342,6 +342,9 @@ PerfectTravel()
 	{
 		OutputDebug, [Perfect] No intersection found, you probably measured something wrong. Do it again.
 		OutputDebug, [Perfect] `n
+		Clipboard := "No intersection found, you probably measured something wrong. Do it again."
+		writeString := "No intersection found, you probably measured something wrong. Do it again."
+		FileAppend, %writeString%, coords.txt
 		Reload
 	}
 	if (throwNum = 2)
