@@ -2,3 +2,5 @@ normalAngle.csv
 twoEyeX.csv
 *.bak
 coords.txt
+*.exe
+*.zip

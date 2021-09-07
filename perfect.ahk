@@ -162,7 +162,28 @@ GetActualAngle(angle)
 	return (realAngle) 
 }
 
-PerfectTravel()
+mult16(distance)
+{
+	found := False
+	Loop, Read, tables/mult16.csv
+	{
+		Loop, Parse, A_LoopReadLine, CSV
+		{
+			if (found)
+			{
+				return (A_LoopField)
+			}
+			if (A_LoopField = distance and A_Index = 1)
+			{
+				found := True
+			}
+		}
+		if (found)
+			break
+	}
+}
+
+PerfectTravel(n)
 {
 	FileDelete, coords.txt
 	OutputDebug, [Perfect] `n
@@ -180,9 +201,12 @@ PerfectTravel()
 	{
 	}
 	throwNum := 0
-	GUIthrow()
-	while(throwNum = 0)
+	if (n = 2)
 	{
+		GUIthrow()
+		while(throwNum = 0)
+		{
+		}
 	}
 	startTime := A_TickCount
 	realAngle := GetActualAngle(angle)
@@ -233,12 +257,17 @@ PerfectTravel()
 		if (foundLine)
 		{
 			doneWithLine := True
+			if (n = 1)
+				break
 		}
 	}
 	
-	for q, offset in previousLine
+	if (n = 2)
 	{
-		offsetStringArray.Push(offset)
+		for q, offset in previousLine
+		{
+			offsetStringArray.Push(offset)
+		}
 	}
 	
 	angleToOffset := (A_TickCount - startTime) / 1000
@@ -252,10 +281,13 @@ PerfectTravel()
 	
 	for i, offsetString in offsetStringArray
 	{
-		OutputDebug, %offsetString%
+		OutputDebug, [Perfect] %offsetString%
 	}
 	*/
 	
+	
+	if (n = 1)
+		throwNum := 1
 	foundMatch := False
 	for i, offsetString in offsetStringArray
 	{
@@ -303,6 +335,33 @@ PerfectTravel()
 				OZ.Push(zChunkDest)
 				NX.Push(xNetherDest)
 				NZ.Push(zNetherDest)
+				if (n = 1)
+				{
+					ovX := xChunkDest
+					ovZ := zChunkDest
+					neX := xNetherDest
+					neZ := zNetherDest
+					;OutputDebug, [Perfect] xOffset: %xOffset%, zOffset: %zOffset%
+					chunkDist := PythagoreanTheorem(xOffset, zOffset)
+					;OutputDebug, [Perfect] chunkDist: %chunkDist%
+					chunkDistArray := StrSplit(chunkDist, ".")
+					chunkDist := chunkDistArray[1]
+					OutputDebug, [Perfect] chunkDist: %chunkDist%
+					blockDist := mult16(chunkDist)
+					OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
+					OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
+					OutputDebug, [Perfect] %blockDist% blocks away
+					OutputDebug, [Perfect] `n
+					Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist
+							
+					writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist
+					FileAppend, %writeString%, coords.txt
+					if (TTS)
+					{
+						ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
+					}
+					Reload
+				}
 			}
 			else if (throwNum = 2)
 			{
@@ -324,12 +383,21 @@ PerfectTravel()
 							ovZ := OZ[theIndex]
 							neX := NX[theIndex]
 							neZ := NZ[theIndex]
+							
+							;OutputDebug, [Perfect] xOffset: %xOffset%, zOffset: %zOffset%
+							chunkDist := PythagoreanTheorem(xOffset, zOffset)
+							;OutputDebug, [Perfect] chunkDist: %chunkDist%
+							chunkDistArray := StrSplit(chunkDist, ".")
+							chunkDist := chunkDistArray[1]
+							;OutputDebug, [Perfect] chunkDist: %chunkDist%
+							blockDist := mult16(chunkDist)
 							OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
 							OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
+							OutputDebug, [Perfect] %blockDist% blocks away
 							OutputDebug, [Perfect] `n
-							Clipboard :=  "OW: " ovX " " ovZ " N: " neX " " neZ
+							Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist
 							
-							writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ
+							writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist
 							FileAppend, %writeString%, coords.txt
 							if (TTS)
 							{
@@ -501,8 +569,12 @@ global NZ := []
 	
 	^P::
 		;if (CheckRes())
-			PerfectTravel()
+			PerfectTravel(2)
 		;else
 			;OutputDebug, wrong resolution
+	return
+	
+	^+P::
+		PerfectTravel(1)
 	return
 }
