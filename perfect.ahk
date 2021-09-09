@@ -185,6 +185,13 @@ mult16(distance)
 
 PerfectTravel(n)
 {
+	timeToGetAngle := 0
+	timeToGetOffsets := 0
+	timeToGetDestinationChunks := 0
+	timeToGetDistanceFrom00 := 0
+	timeToCheckRing := 0
+	timeAddingToArray := 0
+	timeComparingDests := 0
 	FileDelete, coords.txt
 	OutputDebug, [Perfect] `n
 	array1 := StrSplit(Clipboard, " ")
@@ -208,17 +215,22 @@ PerfectTravel(n)
 		{
 		}
 	}
+	if (throwNum = 1)
+	{
+		OX := []
+		OZ := []
+		NX := []
+		NZ := []
+	}
 	startTime := A_TickCount
 	realAngle := GetActualAngle(angle)
-	angleConvert := (A_TickCount - startTime) / 1000
-	startTime := A_TickCount
+	timeToGetAngle += (A_TickCount - startTime) / 1000
 	OutputDebug, [Perfect] `n
-	;OutputDebug, %angleConvert% seconds to convert the angle
-	;OutputDebug, `n
 	foundLine := false
 	offsetStringArray := []
 	previousLine := []
 	doneWithLine := False
+	startTime := A_TickCount
 	Loop, Read, tables/angleOffsets.csv
 	{
 		Loop, Parse, A_LoopReadLine, CSV
@@ -269,11 +281,8 @@ PerfectTravel(n)
 			offsetStringArray.Push(offset)
 		}
 	}
-	
-	angleToOffset := (A_TickCount - startTime) / 1000
+	timeToGetOffsets += (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
-	;OutputDebug, %angleToOffset% seconds to get the offsets
-	;OutputDebug, `n
 	/*
 	numOffsets := offsetStringArray.MaxIndex()
 	numprev := previousLine.MaxIndex()
@@ -302,27 +311,37 @@ PerfectTravel(n)
 		zChunkDest := zDestination[1]
 		xNetherDest := xDestination[2]
 		zNetherDest := zDestination[2]
-		distanceString := PythagoreanTheorem(xChunkDest, zChunkDest)
-		distanceArray := StrSplit(distanceString, ".")
-		distance := distanceArray[1]
-		originDistance := False
-		Loop, Read, tables/chunkRing.csv
+		if (n = 1)
 		{
-			Loop, Parse, A_LoopReadLine, CSV
+			;OutputDebug, [timing] checking quality
+			startTime := A_TickCount
+			distanceString := PythagoreanTheorem(xChunkDest, zChunkDest)
+			timeToGetDistanceFrom00 += (A_TickCount - startTime) / 1000
+			distanceArray := StrSplit(distanceString, ".")
+			distance := distanceArray[1]
+			originDistance := False
+			startTime := A_TickCount
+			Loop, Read, tables/chunkRing.csv
 			{
+				Loop, Parse, A_LoopReadLine, CSV
+				{
+					if (originDistance)
+					{
+						quality := A_LoopField
+					}
+					if (A_LoopField = distance)
+					{
+						originDistance := True
+					}
+				}
 				if (originDistance)
-				{
-					quality := A_LoopField
-				}
-				if (A_LoopField = distance)
-				{
-					originDistance := True
-				}
+					break
 			}
-			if (originDistance)
-				break
+			timeToCheckRing += (A_TickCount - startTime) / 1000
+			;OutputDebug, [timing] %checkRing% seconds to check if that distance was in the ring
+			;OutputDebug, [timing] quality is %quality%
 		}
-		if (quality = "inRing")
+		if (n = 2 or quality = "inRing")
 		{
 			;OutputDebug, this is/would be %quality%
 			;OutputDebug, X Z Chunk offset: %xOffset% %zOffset%
@@ -331,10 +350,6 @@ PerfectTravel(n)
 			if (throwNum = 1)
 			{
 				;OutputDebug, first throw so adding to array
-				OX.Push(xChunkDest)
-				OZ.Push(zChunkDest)
-				NX.Push(xNetherDest)
-				NZ.Push(zNetherDest)
 				if (n = 1)
 				{
 					ovX := xChunkDest
@@ -346,7 +361,7 @@ PerfectTravel(n)
 					;OutputDebug, [Perfect] chunkDist: %chunkDist%
 					chunkDistArray := StrSplit(chunkDist, ".")
 					chunkDist := chunkDistArray[1]
-					OutputDebug, [Perfect] chunkDist: %chunkDist%
+					;OutputDebug, [Perfect] chunkDist: %chunkDist%
 					blockDist := mult16(chunkDist)
 					OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
 					OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
@@ -360,11 +375,19 @@ PerfectTravel(n)
 					{
 						ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
 					}
+					ShowTimes()
 					Reload
 				}
+				startTime := A_TickCount
+				OX.Push(xChunkDest)
+				OZ.Push(zChunkDest)
+				NX.Push(xNetherDest)
+				NZ.Push(zNetherDest)
+				timeAddingToArray += (A_TickCount - startTime) / 1000
 			}
 			else if (throwNum = 2)
 			{
+				startTime := A_TickCount
 				;OutputDebug, second throw so checking
 				for i, xchunk in OX
 				{
@@ -403,10 +426,12 @@ PerfectTravel(n)
 							{
 								ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
 							}
+							ShowTimes()
 							Reload
 						}
 					}
 				}
+				timeComparingDests += (A_TickCount - startTime) / 1000
 			}
 			else
 			{
@@ -430,6 +455,7 @@ PerfectTravel(n)
 		{
 			ComObjCreate("SAPI.SpVoice").Speak("Measured wrong, do everything again.")
 		}
+		ShowTimes()
 		Reload
 	}
 	if (throwNum = 2)
@@ -450,6 +476,7 @@ PerfectTravel(n)
 		{
 			ComObjCreate("SAPI.SpVoice").Speak("First throw work done, press hotkey again for second throw when ready.")
 		}
+		ShowTimes()
 	}
 	OutputDebug, [Perfect] `n
 	
@@ -459,6 +486,8 @@ offsetCalculation(location, offset)
 {
 	;OutputDebug, location: %location%, offset: %offset%
 	checkForEntry := false
+	destString := false
+	startTime := A_TickCount
 	Loop, Read, tables/coordsToChunk.csv
 	{
 		if (A_Index = 1)
@@ -493,10 +522,24 @@ offsetCalculation(location, offset)
 			}
 		}
 	}
-	
+	if (destString = false)
+	{
+		OutputDebug, [Perfect] You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again.
+		OutputDebug, [Perfect] `n
+		Clipboard := "You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again."
+		writeString := "You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again."
+		FileAppend, %writeString%, coords.txt
+		if (TTS)
+		{
+			ComObjCreate("SAPI.SpVoice").Speak("You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again.")
+		}
+		Reload
+	}
 	;OutputDebug, %destString%
 	arr := StrSplit(destString, ";")
-	
+	timeToGetDestinationChunks += (A_TickCount - startTime) / 1000
+	;OutputDebug, [timing] %getChunk% seconds to get the chunk
+	;startTime := A_TickCount
 	return (arr)
 }
 
@@ -560,6 +603,27 @@ global OX := []
 global OZ := []
 global NX := []
 global NZ := []
+
+global timeToGetAngle := 0
+global timeToGetOffsets := 0
+global timeToGetDestinationChunks := 0
+global timeToGetDistanceFrom00 := 0
+global timeToCheckRing := 0
+global timeAddingToArray := 0
+global timeComparingDests := 0
+
+ShowTimes()
+{
+	OutputDebug, [timing] %timeToGetAngle% seconds to get angle
+	OutputDebug, [timing] %timeToGetOffsets% seconds to get offsets
+	OutputDebug, [timing] %timeToGetDestinationChunks% seconds to add offsets
+	OutputDebug, [timing] %timeToGetDistanceFrom00% seconds to get distance from 0 0
+	OutputDebug, [timing] %timeToCheckRing% seconds to check if those distances are in ring
+	OutputDebug, [timing] %timeAddingToArray% seconds to push destinations to arrays
+	OutputDebug, [timing] %timeComparingDests% seconds to compare destinations
+	OutputDebug, [timing]
+}
+
 
 #IfWinActive, Minecraft
 {
