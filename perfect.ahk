@@ -520,6 +520,14 @@ offsetCalculation(location, offset)
 				checkForEntry := False
 				destString := A_LoopField
 			}
+			if (destString)
+			{
+				break
+			}
+		}
+		if (destString)
+		{
+			break
 		}
 	}
 	if (destString = false)
