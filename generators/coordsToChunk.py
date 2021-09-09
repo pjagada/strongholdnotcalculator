@@ -1,5 +1,5 @@
 import csv
-radius = 3000
+radius = 8000
 
 coordList = []
 chunkList = []

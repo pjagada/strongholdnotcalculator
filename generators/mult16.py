@@ -1,5 +1,5 @@
 import csv
-maxAxial = 400
+maxAxial = 500
 
 data = []
 
