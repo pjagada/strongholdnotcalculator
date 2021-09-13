@@ -34,7 +34,7 @@ Run the ahk script that you need (either 1 eye or 2 eye) by right clicking on th
 
 Open up DebugView if you want to use it.
 
-Once you get your angle and f3 c, pause and press Ctrl P.
+Once you get your angle and f3 c, pause and press Ctrl P if you plan on throwing 2 eyes, and Ctrl Shift P if you plan on throwing 1 eye (edit these hotkeys at the bottom of the script).
 
 Follow the instructions in the GUI.
 
