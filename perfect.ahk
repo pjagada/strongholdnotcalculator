@@ -183,6 +183,16 @@ mult16(distance)
 	}
 }
 
+ClipboardNotCorrect()
+{
+	OutputDebug, Your clipboard doesn't contain the right numbers. Make sure you pressed f3 c and try again.
+	if (TTS)
+	{
+		ComObjCreate("SAPI.SpVoice").Speak("Your clipboard doesn't contain the right numbers. Make sure you pressed f3 c and try again.")
+	}
+	MsgBox, Your clipboard doesn't contain the right numbers. Make sure you pressed f3 c and try again after closing this box.
+}
+
 PerfectTravel(n)
 {
 	timeToGetAngle := 0
@@ -198,6 +208,21 @@ PerfectTravel(n)
 	fullx := array1[7]
 	fullz := array1[9]
 	angle := array1[10]
+	if fullx is not number
+	{
+		ClipboardNotCorrect()
+		return
+	}
+	if fullz is not number
+	{
+		ClipboardNotCorrect()
+		return
+	}
+	if angle is not number
+	{
+		ClipboardNotCorrect()
+		return
+	}
 	arrayx := StrSplit(fullx, ".")
 	arrayz := StrSplit(fullz, ".")
 	x := arrayx[1]
