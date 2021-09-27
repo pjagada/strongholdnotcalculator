@@ -232,7 +232,8 @@ PerfectTravel(n)
 	while(slit = 0)
 	{
 	}
-	throwNum := 0
+	throwNum += 1
+	/*
 	if (n = 2)
 	{
 		GUIthrow()
@@ -240,6 +241,7 @@ PerfectTravel(n)
 		{
 		}
 	}
+	*/
 	if (throwNum = 1)
 	{
 		OX := []
