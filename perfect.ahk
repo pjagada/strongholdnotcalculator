@@ -193,6 +193,39 @@ ClipboardNotCorrect()
 	MsgBox, Your clipboard doesn't contain the right numbers. Make sure you pressed f3 c and try again after closing this box.
 }
 
+OutputCoords(xOffset, zOffset, theIndex, extra := False)
+{
+	OutputDebug, [Perfect] Go to:
+	ovX := OX[theIndex]
+	ovZ := OZ[theIndex]
+	neX := NX[theIndex]
+	neZ := NZ[theIndex]
+							
+	chunkDist := PythagoreanTheorem(xOffset, zOffset)
+	chunkDistArray := StrSplit(chunkDist, ".")
+	chunkDist := chunkDistArray[1]
+	blockDist := mult16(chunkDist)
+	OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
+	OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
+	OutputDebug, [Perfect] %blockDist% blocks away
+	OutputDebug, [Perfect] `n
+	Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist
+	writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist
+	if (extra)
+	{
+		Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist ", this was from checking extra offsets, so it may not be perfectly accurate but should be within a couple hundred blocks."
+		writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist . "`nfrom extra offsets so may be off"
+	}
+							
+	
+	FileAppend, %writeString%, coords.txt
+	if (TTS)
+	{
+		ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
+	}
+	ShowTimes()
+}
+
 PerfectTravel(n)
 {
 	timeToGetAngle := 0
@@ -256,6 +289,9 @@ PerfectTravel(n)
 	foundLine := false
 	offsetStringArray := []
 	previousLine := []
+	extraPreviousLine := []
+	extraNextLine := []
+	readExtraLine := False
 	doneWithLine := False
 	startTime := A_TickCount
 	Loop, Read, tables/angleOffsets.csv
@@ -271,12 +307,17 @@ PerfectTravel(n)
 				}
 				else if (!foundLine)
 				{
+					extraPreviousLine := previousLine
 					previousLine := []
 				}
 			}
 			else
 			{
-				if (foundLine or doneWithLine)
+				if (readExtraLine)
+				{
+					extraNextLine.Push(A_LoopField)
+				}
+				else if (foundLine or doneWithLine)
 				{
 					if (InStr(A_LoopField, " "))
 						offsetStringArray.Push(A_LoopField)
@@ -288,10 +329,13 @@ PerfectTravel(n)
 				}
 			}
 		}
+		if (readExtraLine)
+		{
+			break
+		}
 		if (doneWithLine)
 		{
-			doneWithLine := false
-			break
+			readExtraLine := True
 		}
 		if (foundLine)
 		{
@@ -307,15 +351,48 @@ PerfectTravel(n)
 		{
 			offsetStringArray.Push(offset)
 		}
+		if (throwNum = 1)
+		{
+			for r, offset in extraPreviousLine
+			{
+				extraOffsets1.Push(offset)
+			}
+			for r, offset in extraNextLine
+			{
+				extraOffsets1.Push(offset)
+			}
+		}
+		else
+		{
+			for r, offset in extraPreviousLine
+			{
+				extraOffsets2.Push(offset)
+			}
+			for r, offset in extraNextLine
+			{
+				extraOffsets2.Push(offset)
+			}
+		}
 	}
 	timeToGetOffsets += (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
 	/*
 	numOffsets := offsetStringArray.MaxIndex()
 	numprev := previousLine.MaxIndex()
-	OutputDebug, %numOffsets% %numprev%
+	OutputDebug, [Perfect] main offsets:
 	
 	for i, offsetString in offsetStringArray
+	{
+		OutputDebug, [Perfect] %offsetString%
+	}
+	
+	OutputDebug, [Perfect] extra offsets 1:
+	for i, offsetString in extraOffsets1
+	{
+		OutputDebug, [Perfect] %offsetString%
+	}
+	OutputDebug, [Perfect] extra offsets 2:
+	for i, offsetString in extraOffsets2
 	{
 		OutputDebug, [Perfect] %offsetString%
 	}
@@ -324,6 +401,10 @@ PerfectTravel(n)
 	
 	if (n = 1)
 		throwNum := 1
+	xStand[throwNum] := x
+	zStand[throwNum] := z
+	if (throwNum = 2)
+		fullOffsets2 := offsetStringArray
 	foundMatch := False
 	for i, offsetString in offsetStringArray
 	{
@@ -425,40 +506,17 @@ PerfectTravel(n)
 						if (zchunk = zChunkDest)
 						{
 							;OutputDebug, z chunk matches
-							theIndex := i
-							foundMatch := True
-							
-							OutputDebug, [Perfect] Go to:
-							ovX := OX[theIndex]
-							ovZ := OZ[theIndex]
-							neX := NX[theIndex]
-							neZ := NZ[theIndex]
-							
-							;OutputDebug, [Perfect] xOffset: %xOffset%, zOffset: %zOffset%
-							chunkDist := PythagoreanTheorem(xOffset, zOffset)
-							;OutputDebug, [Perfect] chunkDist: %chunkDist%
-							chunkDistArray := StrSplit(chunkDist, ".")
-							chunkDist := chunkDistArray[1]
-							;OutputDebug, [Perfect] chunkDist: %chunkDist%
-							blockDist := mult16(chunkDist)
-							OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
-							OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
-							OutputDebug, [Perfect] %blockDist% blocks away
-							OutputDebug, [Perfect] `n
-							Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist
-							
-							writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist
-							FileAppend, %writeString%, coords.txt
-							if (TTS)
-							{
-								ComObjCreate("SAPI.SpVoice").Speak("Coords ready and in clipboard")
-							}
-							ShowTimes()
+							foundMatch = True
+							OutputCoords(xOffset, zOffset, i)
 							Reload
 						}
 					}
 				}
 				timeComparingDests += (A_TickCount - startTime) / 1000
+				OX2.Push(xChunkDest)
+				OZ2.Push(zChunkDest)
+				NX2.Push(xNetherDest)
+				NZ2.Push(zNetherDest)
 			}
 			else
 			{
@@ -473,30 +531,12 @@ PerfectTravel(n)
 	;OutputDebug, `n
 	if (foundMatch = False and throwNum = 2)
 	{
-		OutputDebug, [Perfect] No intersection found, you probably measured something wrong. Do it again.
-		OutputDebug, [Perfect] `n
-		Clipboard := "No intersection found, you probably measured something wrong. Do it again."
-		writeString := "No intersection found, you probably measured something wrong. Do it again."
-		FileAppend, %writeString%, coords.txt
-		if (TTS)
-		{
-			ComObjCreate("SAPI.SpVoice").Speak("Measured wrong, do everything again.")
-		}
+		if (CheckExtras() = False)
+			NoIntersection()
 		ShowTimes()
 		Reload
 	}
-	if (throwNum = 2)
-	{
-		OutputDebug, `n
-		OutputDebug, Final go to:
-		ovX := OX[theIndex]
-		ovZ := OZ[theIndex]
-		neX := NX[theIndex]
-		neZ := NZ[theIndex]
-		OutputDebug, Overworld chunk coords: %ovX% %ovZ%
-		OutputDebug, Nether block coords:    %neX% %neZ%
-	}
-	else
+	if (throwNum = 1)
 	{
 		OutputDebug, [Perfect] all stuff for first throw done, go ahead and press the hotkey again for your second throw when you have it ready
 		if (TTS)
@@ -507,6 +547,110 @@ PerfectTravel(n)
 	}
 	OutputDebug, [Perfect] `n
 	
+}
+
+CheckExtras()
+{
+	OutputDebug, [Perfect] No initial intersection, so checking extra offsets. As a result, the outcome may be off, but should be within a couple hundred blocks, so consider redoing and measuring correctly.
+	OutputDebug, [Perfect]
+	/*
+	OutputDebug, [Perfect] possible destinations from throw 1:
+	for i, destX in OX
+	{
+		destZ := OZ[i]
+		OutputDebug, [Perfect] %destX% %destZ%
+	}
+	
+	OutputDebug, [Perfect] possible destinations from throw 2:
+	for i, destX in OX2
+	{
+		destZ := OZ2[i]
+		OutputDebug, [Perfect] %destX% %destZ%
+	}
+	*/
+	
+	
+	
+	Loop, 2
+	{
+		throwNum := A_Index
+		x := xStand[A_Index]
+		z := zStand[A_Index]
+		if (throwNum = 1)
+		{
+			offsetStringArray := extraOffsets1
+		}
+		else {
+			offsetStringArray := extraOffsets2
+		}
+		for i, offsetString in offsetStringArray
+		{
+			array2 := StrSplit(offsetString, " ")
+			xOffset := array2[1]
+			zOffset := array2[2]
+			
+			;OutputDebug, [Perfect] x: %x%, xOffset: %xOffset%
+			xDestination := offsetCalculation(x, xOffset)
+			zDestination := offsetCalculation(z, zOffset)
+	
+			xChunkDest := xDestination[1]
+			zChunkDest := zDestination[1]
+			xNetherDest := xDestination[2]
+			zNetherDest := zDestination[2]
+			if (throwNum = 1)
+			{
+				OX.Push(xChunkDest)
+				OZ.Push(zChunkDest)
+				NX.Push(xNetherDest)
+				NZ.Push(zNetherDest)
+			}
+			else
+			{
+				OX2.Push(xChunkDest)
+				OZ2.Push(zChunkDest)
+				NX2.Push(xNetherDest)
+				NZ2.Push(zNetherDest)
+				fullOffsets2.Push(offsetString)
+			}
+		}
+	}
+	for i, xchunk1 in OX
+	{
+		for j, xchunk2 in OX2
+		{
+			if (xchunk1 = xChunk2)
+			{
+				;OutputDebug, x chunk matches
+				zchunk1 := OZ[i]
+				zchunk2 := OZ2[j]
+				if (zchunk1 = zchunk2)
+				{
+					;OutputDebug, z chunk matches
+					offsetString := fullOffsets2[j]
+					array2 := StrSplit(offsetString, " ")
+					xOffset := array2[1]
+					zOffset := array2[2]
+					OutputCoords(xOffset, zOffset, i, True)
+					;OutputDebug, [Perfect] reaching here
+					return True
+				}
+			}
+		}
+	}
+	return False
+}
+
+NoIntersection()
+{
+	OutputDebug, [Perfect] No intersection found, you probably measured something wrong. Do it again.
+	OutputDebug, [Perfect] `n
+	Clipboard := "No intersection found, you probably measured something wrong. Do it again."
+	writeString := "No intersection found, you probably measured something wrong. Do it again."
+	FileAppend, %writeString%, coords.txt
+	if (TTS)
+	{
+		ComObjCreate("SAPI.SpVoice").Speak("Measured wrong, do everything again.")
+	}
 }
 
 offsetCalculation(location, offset)
@@ -557,6 +701,7 @@ offsetCalculation(location, offset)
 			break
 		}
 	}
+	;OutputDebug, [Perfect] destString: %destString%
 	if (destString = false)
 	{
 		OutputDebug, [Perfect] You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again.
@@ -638,6 +783,18 @@ global OX := []
 global OZ := []
 global NX := []
 global NZ := []
+
+global OX2 := []
+global OZ2 := []
+global NX2 := []
+global NZ2 := []
+
+global extraOffsets1 := []
+global extraOffsets2 := []
+global fullOffsets2 := []
+
+global xStand := [0, 0]
+global zStand := [0, 0]
 
 global timeToGetAngle := 0
 global timeToGetOffsets := 0

@@ -46,6 +46,11 @@ For example, if your initial angle was 10 degrees, that means the eye is pointin
 
 After it's done "computing" the numbers for the second eye (it'll take a couple seconds), your clipboard will contain the coords you need to go to, the text file will generate, and DebugView will also show the coords.
 
+When doing 2 eye, it uses offsets from neighboring rows from Four's sheet to account for an error of +/- 0.01 degrees. If it can't find an intersection with those, it'll expand its search to take the 2 neighboring rows on either side, accounting for an error of +/- 0.02 degrees on each throw. This will likely result in a value that can be up to a couple hundred blocks off, so it may be worth it to remeasure, but you can use what it gives you and be pretty close.
+
+### Ctrl B:
+If you f3 c in the nether and press Ctrl B (you can change this hotkey at the bottom of the script), a number will be shown on screen that is the distance from 0 0. This works as long as each coordinate's absolute value is less than 300 blocks. This can be useful for blinding at optimal coordinates or potentially portal divine.
+
 
 ## Possible questions
 ### Legality?
