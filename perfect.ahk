@@ -265,7 +265,10 @@ PerfectTravel(n)
 	while(slit = 0)
 	{
 	}
-	throwNum += 1
+	if (throwNum = 0)
+		throwNum := 1
+	else if (throwNum = 1)
+		throwNum := 2
 	/*
 	if (n = 2)
 	{
