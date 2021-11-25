@@ -822,6 +822,10 @@ ShowTimes()
 
 #IfWinActive, Minecraft
 {
+	^F5::
+		Reload
+	return
+	
 	^B::
 		CheckBlindCoords()
 	return
