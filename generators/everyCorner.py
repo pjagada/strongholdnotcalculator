@@ -4,7 +4,7 @@ from collections import defaultdict
 from math import atan,degrees,pi
 import os
 
-RANGE=2000
+RANGE=3200
 
 def getAngles(dist,chunkX,chunkZ):
     print(chunkX,chunkZ)

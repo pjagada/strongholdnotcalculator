@@ -5,3 +5,4 @@ coords.txt
 *.exe
 *.zip
 generators/offsets/
+tables/offsets/
