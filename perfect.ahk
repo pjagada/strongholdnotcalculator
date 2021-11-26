@@ -225,6 +225,76 @@ OutputCoords(xOffset, zOffset, theIndex, extra := False)
 	}
 	ShowTimes()
 }
+global standXChunk
+global standZChunk
+global standXBlock
+global standZBlock
+
+getStand(which, coord)
+{
+	foundLine := false
+	Loop, Read, tables/coordsToChunkAndBlock.csv
+	{
+		Loop, Parse, A_LoopReadLine, CSV
+		{
+			if (A_Index = 1)
+			{
+				if (coord = A_LoopField)
+				{
+					foundLine := true
+					;OutputDebug, angle in four's sheet: %A_LoopField%
+				}
+			}
+			else if (A_Index = 2)
+			{
+				if (foundLine)
+				{
+					if (which == "x")
+					{
+						standXChunk := A_LoopField
+					}
+					else if (which == "z")
+					{
+						standZChunk := A_LoopField
+					}
+					else
+					{
+						MsgBox, which error
+						EXitApp
+					}
+				}
+			}
+			else if (A_Index = 3)
+			{
+				if (foundLine)
+				{
+					if (which == "x")
+					{
+						standXBlock := A_LoopField
+					}
+					else if (which == "z")
+					{
+						standZBlock := A_LoopField
+					}
+					else
+					{
+						MsgBox, which error
+						EXitApp
+					}
+				}
+			}
+			else 
+			{
+				MsgBox, column more than 3 in coordsToChunkAndBlock
+				ExitApp
+			}
+		}
+		if (foundLine)
+		{
+			break
+		}
+	}
+}
 
 PerfectTravel(n)
 {
@@ -260,6 +330,12 @@ PerfectTravel(n)
 	arrayz := StrSplit(fullz, ".")
 	x := arrayx[1]
 	z := arrayz[1]
+	xDec := arrayx[2]
+	zDec := arrayz[2]
+	xD := SubStr(xDec, 1, 1)
+	zD := SubStr(zDEc, 1, 1)
+	decX := x . "." . xD
+	decZ := z . "." . zD
 	slit := 0
 	GUIthing()
 	while(slit = 0)
@@ -269,15 +345,6 @@ PerfectTravel(n)
 		throwNum := 1
 	else if (throwNum = 1)
 		throwNum := 2
-	/*
-	if (n = 2)
-	{
-		GUIthrow()
-		while(throwNum = 0)
-		{
-		}
-	}
-	*/
 	if (throwNum = 1)
 	{
 		OX := []
@@ -297,7 +364,20 @@ PerfectTravel(n)
 	readExtraLine := False
 	doneWithLine := False
 	startTime := A_TickCount
-	Loop, Read, tables/angleOffsets.csv
+	if (n == 1)
+	{
+		getStand("x", decX)
+		getStand("z", decZ)
+		readFile := "tables/offsets/x" . standXBlock . "z" . standZBlock . ".csv"
+		;OutputDebug, [Perfect] %standXChunk% %standZChunk% %standXBlock% %standZBlock%
+		;ExitApp
+	}
+	if (n == 2)
+	{
+		readFile := "tables/angleOffsets.csv"
+	}
+	OutputDebug, [Perfect] %readFile%
+	Loop, Read, %readFile%
 	{
 		Loop, Parse, A_LoopReadLine, CSV
 		{
@@ -411,12 +491,13 @@ PerfectTravel(n)
 	foundMatch := False
 	for i, offsetString in offsetStringArray
 	{
+		OutputDebug, [Perfect] %offsetString%
 		array2 := StrSplit(offsetString, " ")
 		xOffset := array2[1]
 		zOffset := array2[2]
 	
-		xDestination := offsetCalculation(x, xOffset)
-		zDestination := offsetCalculation(z, zOffset)
+		xDestination := offsetCalculation(x, xOffset, n, "x")
+		zDestination := offsetCalculation(z, zOffset, n, "z")
 	
 		xChunkDest := xDestination[1]
 		zChunkDest := zDestination[1]
@@ -656,12 +737,24 @@ NoIntersection()
 	}
 }
 
-offsetCalculation(location, offset)
+offsetCalculation(location, offset, n := 2, axis := "y")
 {
 	;OutputDebug, location: %location%, offset: %offset%
 	checkForEntry := false
 	destString := false
 	startTime := A_TickCount
+	if (n == 1)
+	{
+		if (axis == "x")
+			currentChunk := standXChunk
+		else if (axis == "z")
+			currentChunk := standZChunk
+		else
+		{
+			MsgBox, y axis monkaOMEGA
+			ExitApp
+		}
+	}
 	Loop, Read, tables/coordsToChunk.csv
 	{
 		if (A_Index = 1)
@@ -677,15 +770,28 @@ offsetCalculation(location, offset)
 		}
 		Loop, Parse, A_LoopReadLine, CSV
 		{
-			if (A_Index = 1)
+			if (n == 2)
 			{
-				if (A_LoopField = location)
+				if (A_Index = 1)
 				{
-					;OutputDebug, current location from clipboard: %location%, current location from sheet: %A_LoopField%
-					checkForEntry := True
+					if (A_LoopField = location)
+					{
+						;OutputDebug, current location from clipboard: %location%, current location from sheet: %A_LoopField%
+						checkForEntry := True
+					}
 				}
 			}
-			if (checkForEntry and A_Index = 2)
+			else
+			{
+				if (A_Index = 2)
+				{
+					if (A_LoopField = currentChunk)
+					{
+						checkForEntry := True
+					}
+				}
+			}
+			if (checkForEntry and A_Index = 2 and n == 2)
 			{
 				currentChunk := A_LoopField
 			}
