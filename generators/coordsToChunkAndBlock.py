@@ -19,6 +19,10 @@ for i in range(0, radius):
             chunkList.append(int(j/16) - 1)
             blockList.append((j-int(j/16)*16)+16)
 
+for k in range(len(blockList)):
+    inputList[k] = round(inputList[k], 1)
+    blockList[k] = round(blockList[k], 1)
+
 headerRow = ['Coordinate', 'Chunk number', 'Block number']
 
 with open('coordsToChunkAndBlock.csv', mode='w', newline='') as file:
