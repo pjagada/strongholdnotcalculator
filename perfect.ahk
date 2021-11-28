@@ -491,7 +491,7 @@ PerfectTravel(n)
 	foundMatch := False
 	for i, offsetString in offsetStringArray
 	{
-		OutputDebug, [Perfect] %offsetString%
+		OutputDebug, [Perfect] %i%th offset is %offsetString%
 		array2 := StrSplit(offsetString, " ")
 		xOffset := array2[1]
 		zOffset := array2[2]
