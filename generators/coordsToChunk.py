@@ -3,7 +3,7 @@ radius = 8000
 
 coordList = []
 chunkList = []
-offsetList = list(range(-199,200))
+offsetList = list(range(-200,201))
 for i in range(0, int(radius/16)):
     coordList.append(16*i)
     chunkList.append(i)
