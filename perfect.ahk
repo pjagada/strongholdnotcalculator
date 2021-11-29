@@ -364,18 +364,9 @@ PerfectTravel(n)
 	readExtraLine := False
 	doneWithLine := False
 	startTime := A_TickCount
-	if (n == 1)
-	{
-		getStand("x", decX)
-		getStand("z", decZ)
-		readFile := "tables/offsets/x" . standXBlock . "z" . standZBlock . ".csv"
-		;OutputDebug, [Perfect] %standXChunk% %standZChunk% %standXBlock% %standZBlock%
-		;ExitApp
-	}
-	if (n == 2)
-	{
-		readFile := "tables/angleOffsets.csv"
-	}
+	getStand("x", decX)
+	getStand("z", decZ)
+	readFile := "tables/offsets/x" . standXBlock . "z" . standZBlock . ".csv"
 	OutputDebug, [Perfect] %readFile%
 	Loop, Read, %readFile%
 	{
@@ -459,27 +450,6 @@ PerfectTravel(n)
 	}
 	timeToGetOffsets += (A_TickCount - startTime) / 1000
 	startTime := A_TickCount
-	/*
-	numOffsets := offsetStringArray.MaxIndex()
-	numprev := previousLine.MaxIndex()
-	OutputDebug, [Perfect] main offsets:
-	
-	for i, offsetString in offsetStringArray
-	{
-		OutputDebug, [Perfect] %offsetString%
-	}
-	
-	OutputDebug, [Perfect] extra offsets 1:
-	for i, offsetString in extraOffsets1
-	{
-		OutputDebug, [Perfect] %offsetString%
-	}
-	OutputDebug, [Perfect] extra offsets 2:
-	for i, offsetString in extraOffsets2
-	{
-		OutputDebug, [Perfect] %offsetString%
-	}
-	*/
 	
 	
 	if (n = 1)
@@ -615,7 +585,7 @@ PerfectTravel(n)
 	;OutputDebug, `n
 	if (foundMatch = False and throwNum = 2)
 	{
-		if (CheckExtras() = False)
+		if (CheckExtras() = False) ; currently not used
 			NoIntersection()
 		ShowTimes()
 		Reload
@@ -635,6 +605,7 @@ PerfectTravel(n)
 
 CheckExtras()
 {
+	return False ; too lazy to fix this for anywhere in the chunk rn
 	OutputDebug, [Perfect] No initial intersection, so checking extra offsets. As a result, the outcome may be off, but should be within a couple hundred blocks, so consider redoing and measuring correctly.
 	OutputDebug, [Perfect]
 	/*
@@ -743,8 +714,6 @@ offsetCalculation(location, offset, n := 2, axis := "y")
 	checkForEntry := false
 	destString := false
 	startTime := A_TickCount
-	if (n == 1)
-	{
 		if (axis == "x")
 			currentChunk := standXChunk
 		else if (axis == "z")
@@ -754,7 +723,6 @@ offsetCalculation(location, offset, n := 2, axis := "y")
 			MsgBox, y axis monkaOMEGA
 			ExitApp
 		}
-	}
 	Loop, Read, tables/coordsToChunk.csv
 	{
 		if (A_Index = 1)
@@ -770,19 +738,6 @@ offsetCalculation(location, offset, n := 2, axis := "y")
 		}
 		Loop, Parse, A_LoopReadLine, CSV
 		{
-			if (n == 2)
-			{
-				if (A_Index = 1)
-				{
-					if (A_LoopField = location)
-					{
-						;OutputDebug, current location from clipboard: %location%, current location from sheet: %A_LoopField%
-						checkForEntry := True
-					}
-				}
-			}
-			else
-			{
 				if (A_Index = 2)
 				{
 					if (A_LoopField = currentChunk)
@@ -790,11 +745,6 @@ offsetCalculation(location, offset, n := 2, axis := "y")
 						checkForEntry := True
 					}
 				}
-			}
-			if (checkForEntry and A_Index = 2 and n == 2)
-			{
-				currentChunk := A_LoopField
-			}
 			if (checkForEntry and A_Index = offsetIndex)
 			{
 				checkForEntry := False
