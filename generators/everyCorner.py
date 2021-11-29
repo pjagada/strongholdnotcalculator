@@ -3,8 +3,11 @@ import csv
 from collections import defaultdict
 from math import atan,degrees,pi,sqrt
 import os
+import threading
 
-RANGE=3200
+threads = 4 # 1, 2, 4, 8, or 16
+
+RANGE = 3200
 
 def getAngles(dist,chunkX,chunkZ):
     print(chunkX,chunkZ)
@@ -28,8 +31,10 @@ def ascendSort(oldList):
         newList.append(theTuple)
     return newList
 
-for q in range(16):
-    data = [(x,z,getAngles(RANGE,x,z)) for x,z in chain.from_iterable([[(x1+0.3,z1+0.3),(x1+0.3,z1+0.7),(x1+0.7,z1+0.3),(x1+0.7,z1+0.7)] for x1,z1 in product(range(q,q+1),range(0,16))])]
+def doit(q):
+    q = int(q)
+    print(f"starting thread {q} to {q+(16//threads)}")
+    data = [(x,z,getAngles(RANGE,x,z)) for x,z in chain.from_iterable([[(x1+0.3,z1+0.3),(x1+0.3,z1+0.7),(x1+0.7,z1+0.3),(x1+0.7,z1+0.7)] for x1,z1 in product(range(q, q+(16//threads)),range(0,16))])]
     print("build data")
     total = len(data)
     completed = set()
@@ -48,4 +53,20 @@ for q in range(16):
                 for key,value in angles[2].items():
                     newList = ascendSort(value)
                     writer.writerow([key,*[f"{x} {z}" for x,z in newList]])
-    print("done")
+    print(f"finishing thread {q} to {q+(16//threads)}")
+
+assert(threads in [1,2,4,8,16]), "Can only use 1, 2, 4, 8, or 16 threads"
+
+print("running with " + str(threads) + " threads")
+
+threadList = []
+for i in range(threads):
+    threadList.append(threading.Thread(target=doit, args=(i*(16/threads),)))
+
+for t1 in threadList:
+    t1.start()
+
+for t2 in threadList:
+    t2.join()
+
+print("everything done")
