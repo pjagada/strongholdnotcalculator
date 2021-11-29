@@ -193,7 +193,7 @@ ClipboardNotCorrect()
 	MsgBox, Your clipboard doesn't contain the right numbers. Make sure you pressed f3 c and try again after closing this box.
 }
 
-OutputCoords(xOffset, zOffset, theIndex, extra := False)
+OutputCoords(xOffset, zOffset, theIndex, angle, extra := False)
 {
 	OutputDebug, [Perfect] Go to:
 	ovX := OX[theIndex]
@@ -208,9 +208,10 @@ OutputCoords(xOffset, zOffset, theIndex, extra := False)
 	OutputDebug, [Perfect] Overworld chunk coords: %ovX% %ovZ%
 	OutputDebug, [Perfect] Nether block coords:    %neX% %neZ%
 	OutputDebug, [Perfect] %blockDist% blocks away
+	OutputDebug, [Perfect] %angle% degrees
 	OutputDebug, [Perfect] `n
-	Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist
-	writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist
+	Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist ", angle: " angle
+	writeString := "OW: " . ovX . " " . ovZ . "`nN: " . neX . " " . neZ . "`ndist: " . blockDist . "`nangle: " . angle
 	if (extra)
 	{
 		Clipboard :=  "OW: " ovX " " ovZ ", N: " neX " " neZ ", dist: " blockDist ", this was from checking extra offsets, so it may not be perfectly accurate but should be within a couple hundred blocks."
@@ -561,7 +562,7 @@ PerfectTravel(n)
 						{
 							;OutputDebug, z chunk matches
 							foundMatch = True
-							OutputCoords(xOffset, zOffset, i)
+							OutputCoords(xOffset, zOffset, i, realAngle)
 							Reload
 						}
 					}
@@ -685,7 +686,7 @@ CheckExtras()
 					array2 := StrSplit(offsetString, " ")
 					xOffset := array2[1]
 					zOffset := array2[2]
-					OutputCoords(xOffset, zOffset, i, True)
+					OutputCoords(xOffset, zOffset, i, 69, True)
 					;OutputDebug, [Perfect] reaching here
 					return True
 				}
