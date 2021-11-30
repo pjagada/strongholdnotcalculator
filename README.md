@@ -6,11 +6,15 @@ Read the [Perfect Travel document] and/or watch the [Perfect Travel video] to un
 
 This script will replace the need for you to do any math, so the important thing is to learn how to get the angle, which is found in pages 5 and 6 of the [Perfect Travel document].
 
+In addition, as of release 2.0, you no longer need to stand at 0,0 in the chunk.
+
 
 ## Setup instructions:
 Download the [latest release]
 
 Extract the zip folder's contents anywhere (make sure they're all in the same folder).
+
+Run either everyCorner.exe or everyCorner.py. It'll probably take around 10-20 minutes to generate the needed tables. You'll know it's done when if you right click on your tables folder, then click Properties, it'll say "Contains: 1,032 Files"
 
 [Download and install AutoHotkey]
 
@@ -34,19 +38,17 @@ Run the ahk script that you need by right clicking on the script file and clicki
 
 Open up DebugView if you want to use it.
 
+Wedge yourself in any block corner (as of release 2.0, it doesn't need to be a chunk corner and it doesn't need to be on the northwest corner of a block; any corner works), and get your angle.
+
 Once you get your angle and f3 c, pause and press Ctrl P if you plan on throwing 2 eyes, and Ctrl Shift P if you plan on throwing 1 eye (edit these hotkeys at the bottom of the script).
 
 Follow the instructions in the GUI.
 
 If you're doing 1 eye, then after a couple seconds, your clipboard will contain the coords you need to go to, the text file will generate, and DebugView will also show the coords.
 
-If you're doing 2 eye, then throw another eye from a neighboring chunk. Try to go in a direction perpendicular to the eye.
-
-For example, if your initial angle was 10 degrees, that means the eye is pointing roughly south, so go in the chunk either east or west of you. If your eye is pointing pretty diagonal, then it doesn't matter which way you go.
+If you're doing 2 eye, then go several blocks away (not in line with your eye throw), wedge yourself in a block corner, throw another eye, get your angle, f3 c, and press Ctrl P again. I have no idea how far apart the two throws should be. Just to be safe, maybe go like 5-10 blocks ish, but I have no idea if that's way too much or not enough. You may have to play around with it.
 
 After it's done "computing" the numbers for the second eye (it'll take a couple seconds), your clipboard will contain the coords you need to go to, the text file will generate, and DebugView will also show the coords.
-
-When doing 2 eye, it uses offsets from neighboring rows from Four's sheet to account for an error of +/- 0.01 degrees. If it can't find an intersection with those, it'll expand its search to take the 2 neighboring rows on either side, accounting for an error of +/- 0.02 degrees on each throw. This will likely result in a value that can be up to a couple hundred blocks off, so it may be worth it to remeasure, but you can use what it gives you and be pretty close.
 
 ### Ctrl B:
 If you f3 c in the nether and press Ctrl B (you can change this hotkey at the bottom of the script), a number will be shown on screen that is the distance from 0 0. This works as long as each coordinate's absolute value is less than 300 blocks. This can be useful for blinding at optimal coordinates or potentially portal divine.
