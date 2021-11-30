@@ -5,14 +5,19 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 global TTS := False ; enable TTS if you want to
-if (TTS)
+
+IfNotExist, tables
 {
-	;ComObjCreate("SAPI.SpVoice").Speak("text")
-	;ComObjCreate("SAPI.SpVoice").Speak("to")
-	;ComObjCreate("SAPI.SpVoice").Speak("speech")
-	;ComObjCreate("SAPI.SpVoice").Speak("is")
-	;ComObjCreate("SAPI.SpVoice").Speak("active")
+  MsgBox, tables folder not found. Make sure you extracted everything correctly, then rerun the script.
+  ExitApp
 }
+
+IfNotExist, tables/offsets/x0.3z0.3.csv
+{
+	MsgBox, offsets folder not populated. Make sure you have all 1024 csv files in there either from running everyCorner.exe (or everyCorner.py) or from downloading and extracting directly, then rerun the script.
+	ExitApp
+}
+
 
 CheckBlindCoords()
 {
@@ -294,6 +299,11 @@ getStand(which, coord)
 		{
 			break
 		}
+	}
+	if (!(foundLine))
+	{
+		MsgBox, You were either too far out or weren't standing at the right spot in a block. Make sure to wedge yourself in a block corner. This script will now reload, so do everything again.
+		Reload
 	}
 }
 
@@ -586,8 +596,8 @@ PerfectTravel(n)
 	;OutputDebug, `n
 	if (foundMatch = False and throwNum = 2)
 	{
-		if (CheckExtras() = False) ; currently not used
-			NoIntersection()
+		;if (CheckExtras() = False) ; currently not used
+		NoIntersection()
 		ShowTimes()
 		Reload
 	}
@@ -606,7 +616,7 @@ PerfectTravel(n)
 
 CheckExtras()
 {
-	return False ; too lazy to fix this for anywhere in the chunk rn
+	;return False ; too lazy to fix this for anywhere in the chunk rn
 	OutputDebug, [Perfect] No initial intersection, so checking extra offsets. As a result, the outcome may be off, but should be within a couple hundred blocks, so consider redoing and measuring correctly.
 	OutputDebug, [Perfect]
 	/*
@@ -766,13 +776,7 @@ offsetCalculation(location, offset, n := 2, axis := "y")
 	{
 		OutputDebug, [Perfect] You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again.
 		OutputDebug, [Perfect] `n
-		Clipboard := "You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again."
-		writeString := "You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again."
-		FileAppend, %writeString%, coords.txt
-		if (TTS)
-		{
-			ComObjCreate("SAPI.SpVoice").Speak("You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again.")
-		}
+		MsgBox, You were either standing on the wrong spot in the chunk or were too far out. The script will automatically reload, so do everything again.
 		Reload
 	}
 	;OutputDebug, %destString%
@@ -887,14 +891,11 @@ ShowTimes()
 		CheckBlindCoords()
 	return
 	
-	^P::
-		;if (CheckRes())
-			PerfectTravel(2)
-		;else
-			;OutputDebug, wrong resolution
+	^P:: ; 2 eye
+		PerfectTravel(2)
 	return
 	
-	^+P::
+	^+P:: ; 1 eye
 		PerfectTravel(1)
 	return
 }
