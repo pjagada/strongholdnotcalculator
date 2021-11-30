@@ -35,7 +35,7 @@ def doit(q):
         for i in range(len(data)):
             standX = str(data[i][0])
             standZ = str(data[i][1])
-            file = "offsets\\" + "x" + standX + "z" + standZ + ".csv"
+            file = "tables\\offsets\\" + "x" + standX + "z" + standZ + ".csv"
             with open(file,mode='w',newline='') as csvfile:
                 writer = csv.writer(csvfile,quoting=csv.QUOTE_ALL)
                 angles = data[i]
@@ -48,6 +48,7 @@ def doit(q):
                 completed.add(percent)
                 print(f"{percent}% done with thread {int(q / (16 / threads))}")
     print(f"finishing thread {q} to {q+(16//threads)}")
+
 
 assert(threads in [1,2,4,8,16]), "Can only use 1, 2, 4, 8, or 16 threads"
 
