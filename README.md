@@ -10,7 +10,9 @@ In addition, as of release 2.0, you no longer need to stand at 0,0 in the chunk.
 
 
 ## Setup instructions:
-Download the [latest release]
+Download the [latest release]. Try downloading the exe version, and if you can't figure out how to get around the anti-virus, then download the py version; it'll do the same thing.
+
+If you downloaded the py version, you will need to [install Python].
 
 Extract the zip folder's contents anywhere (make sure they're all in the same folder).
 
@@ -70,3 +72,4 @@ Basically, one eye is faster and riskier, two eye is slower and safer.
    [Download and install debugview]: <https://docs.microsoft.com/en-us/sysinternals/downloads/debugview>
    [Perfect Travel document]: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>
    [Perfect Travel video]: <https://youtu.be/YpV7I9X-Jso>
+   [install Python]: <https://www.python.org/ftp/python/3.10.0/python-3.10.0-amd64.exe>
