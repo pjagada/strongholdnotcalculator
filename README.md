@@ -79,7 +79,7 @@ Basically, one eye is faster and riskier, two eye is slower and safer.
 
 
 ## Credits
-jojoe77777: created this concept and the original implementation and helped with basically everything
+jojoe77777: created this concept and [the original implementation] and helped with basically everything
 
 Four, Sharpieman20, others: created Perfect Travel and answered lots of questions
 
@@ -98,3 +98,4 @@ Specnr: had miscellaneous ideas to improve the tool
    [epnok 11:03 IGT]: <https://youtu.be/Xn-YKCd3VqM>
    [MoleyG 11:50 IGT]: <https://youtu.be/EGInzoA0gtA>
    [Horsey 12:04 IGT]: <https://youtu.be/KSEEg617WRA>
+   [the original implementation]: <https://github.com/perfectcddata>
