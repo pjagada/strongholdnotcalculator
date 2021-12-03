@@ -66,6 +66,23 @@ Throwing a second eye from an adjacent chunk accounts for both of those errors, 
 
 Basically, one eye is faster and riskier, two eye is slower and safer.
 
+## Notable runs using notcalculator
+[Cube1337x 11:05 IGT]: - fastest run that uses perfect
+
+[Horsey 8:49 IGT stronghold enter] - one of the first runs to do it from anywhere in the chunk
+
+[MoleyG 11:50 IGT] - fastest run that uses 2 eye perfect
+
+[epnok 11:03 IGT] - second fastest run that uses perfect
+
+[Horsey 12:04 IGT] - first major run to use notcalculator, former fastest run to use perfect, 2 eye perfect
+
+
+## Credits
+jojoe77777: created this concept and the original implementation and helped with basically everything
+Four, Sharpieman20, others: created Perfect Travel and answered lots of questions
+Bluesmoke, Gregor, pncakespoon: helped with data generation for anywhere in the chunk
+Specnr: had miscellaneous ideas to improve the tool
 
    [latest release]: <https://github.com/pjagada/strongholdnotcalculator/releases/latest>
    [Download and install AutoHotkey]: <https://www.autohotkey.com/>
@@ -73,3 +90,8 @@ Basically, one eye is faster and riskier, two eye is slower and safer.
    [Perfect Travel document]: <https://docs.google.com/document/d/1JTMOIiS-Hl6_giEB0IQ5ki7UV-gvUXnNmoxhYoSgEAA/edit>
    [Perfect Travel video]: <https://youtu.be/YpV7I9X-Jso>
    [install Python]: <https://www.python.org/ftp/python/3.10.0/python-3.10.0-amd64.exe>
+   [Horsey 8:49 IGT stronghold enter]: <https://youtu.be/JMHJDbBPhps>
+   [Cube1337x 11:05 IGT]: <https://youtu.be/ZT0JU-i_Gmo>
+   [epnok 11:03 IGT]: <https://youtu.be/Xn-YKCd3VqM>
+   [MoleyG 11:50 IGT]: <https://youtu.be/EGInzoA0gtA>
+   [Horsey 12:04 IGT]: <https://youtu.be/KSEEg617WRA>
