@@ -67,7 +67,7 @@ Throwing a second eye from an adjacent chunk accounts for both of those errors, 
 Basically, one eye is faster and riskier, two eye is slower and safer.
 
 ## Notable runs using notcalculator
-[Cube1337x 11:05 IGT]: - fastest run that uses perfect
+[Cube1337x 11:05 IGT] - fastest run that uses perfect
 
 [Horsey 8:49 IGT stronghold enter] - one of the first runs to do it from anywhere in the chunk
 
@@ -80,8 +80,11 @@ Basically, one eye is faster and riskier, two eye is slower and safer.
 
 ## Credits
 jojoe77777: created this concept and the original implementation and helped with basically everything
+
 Four, Sharpieman20, others: created Perfect Travel and answered lots of questions
+
 Bluesmoke, Gregor, pncakespoon: helped with data generation for anywhere in the chunk
+
 Specnr: had miscellaneous ideas to improve the tool
 
    [latest release]: <https://github.com/pjagada/strongholdnotcalculator/releases/latest>
