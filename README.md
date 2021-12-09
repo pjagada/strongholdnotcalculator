@@ -1,6 +1,8 @@
 # StrongholdNotCalculator
 Minecraft random seed speedrunning legal stronghold finder using perfect travel
 
+Note: On December 9, 2021, calculators were unbanned, so this tool is outdated. Use [Ninjabrain-Bot].
+
 ## Before you use this, learn how perfect travel works
 Read the [Perfect Travel document] and/or watch the [Perfect Travel video] to understand how perfect travel works.
 
@@ -67,15 +69,24 @@ Throwing a second eye from an adjacent chunk accounts for both of those errors, 
 Basically, one eye is faster and riskier, two eye is slower and safer.
 
 ## Notable runs using notcalculator
-[Cube1337x 11:05 IGT] - fastest run that uses perfect
 
-[Horsey 8:49 IGT stronghold enter] - one of the first runs to do it from anywhere in the chunk
+This is as of December 9, 2021, the day of the calculator unban.
 
-[MoleyG 11:50 IGT] - fastest run that uses 2 eye perfect
+### 1 eye:
 
-[epnok 11:03 IGT] - second fastest run that uses perfect
+[epnok 11:03 IGT] - top 2 fastest run to use perfect
 
-[Horsey 12:04 IGT] - first major run to use notcalculator, former fastest run to use perfect, 2 eye perfect
+[Cube1337x 11:05 IGT] - top 2 fastest run to use perfect
+
+[Horsey 8:49 IGT stronghold enter]
+
+### 2 eye:
+
+[Specnr 11:10 IGT] - fastest run to use 2 eye perfect
+
+[MoleyG 11:50 IGT]
+
+[Horsey 12:04 IGT] - first major run to use notcalculator, former fastest run to use perfect
 
 
 ## Credits
@@ -99,3 +110,5 @@ Specnr: had miscellaneous ideas to improve the tool
    [MoleyG 11:50 IGT]: <https://youtu.be/EGInzoA0gtA>
    [Horsey 12:04 IGT]: <https://youtu.be/KSEEg617WRA>
    [the original implementation]: <https://github.com/perfectcddata>
+   [Ninjabrain-Bot]: <https://github.com/Ninjabrain1/Ninjabrain-Bot>
+   [Specnr 11:10 IGT]: <https://youtu.be/aqNIqlZqrhU>
